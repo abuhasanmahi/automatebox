@@ -1,0 +1,162 @@
+/*.wrap {
+    background: red;
+    color: #fff;
+}
+
+p:before {
+    content: '';
+    width: 100%;
+    height: 1em;
+    display: inline-block;
+}*/
+
+.single .post-thumb {
+    text-align: center;
+}
+
+#automatebox-content a{
+    text-decoration:none!important;
+}
+
+#automatebox-content table{
+    width:100%;
+}
+
+@media (max-width:768px){
+    .table{
+        font-size: 13px;
+    }
+}
+
+.automatebox-button-text {
+    background: #FF8C00;
+    border-radius: 5px;
+    color: #fff!important;
+    clear:both;
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 15px 10px;
+    padding: 3px 10px;
+    text-align: center;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer;
+}
+
+.automatebox-button-text2 {
+    background: #FF8C00;
+    border-radius: 25px;
+    color: #fff!important;
+    clear:both;
+    display: block;
+    font-size: 25px;
+    font-weight: 600;
+    margin: 25px 10px;
+    padding: 8px 20px;
+    text-align: center;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer;
+}
+
+/*a.automatebox-button-text3 {
+    margin: 20px 0;
+    display: inline-block;
+}*/
+
+.automatebox-button-text3 {
+    box-shadow: inset 0 1px 0 hsla(0,0%,100%,.4);
+    background: #f0c14b;
+    background: linear-gradient(180deg,#f7dfa5,#f0c14b) repeat scroll 0 0 transparent;
+    border: 1px solid #ccc!important;
+    border-color: #9c7e31 #90742d #786025!important;
+    border-radius: 3px;
+    color: #111!important;
+    box-sizing: border-box;
+    margin: 25px 10px;
+    padding: 7px 12px 6px;
+    clear:both;
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    text-align: center;
+    text-decoration: none!important;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer;
+}
+
+.automatebox-button-text4 {
+    box-shadow: inset 0 1px 0 hsla(0,0%,100%,.4);
+    background: #f0c14b;
+    background: linear-gradient(180deg,#f7dfa5,#f0c14b) repeat scroll 0 0 transparent;
+    border: 1px solid #ccc!important;
+    border-color: #9c7e31 #90742d #786025!important;
+    border-radius: 3px;
+    color: #111!important;
+    box-sizing: border-box;
+    margin: 25px 10px;
+    padding: 7px 12px 6px;
+    clear:both;
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 20px;
+    text-align: center;
+    text-decoration: none!important;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer;
+    height: 40px;
+}
+
+/*.affiliate_disclaimer {
+    border-style: groove;
+    text-align:center;
+}*/
+
+.automatebox-desc-img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.automatebox-table-serial {
+    width:5%;
+    text-align: center;
+}
+
+.automatebox-table-image {
+    width:20%;
+    text-align: center;
+}
+
+.automatebox-table-product {
+    width:45%;
+    text-align: center;
+}
+
+.automatebox-table-score {
+    width:5%;
+    text-align: center;
+}
+
+.automatebox-table-price {
+    width:5%;
+    text-align: center;
+}
+
+.automatebox-table-action {
+    width:25%;
+    text-align: center;
+}
+
+.automatebox_align_center {
+    text-align: center;
+}
