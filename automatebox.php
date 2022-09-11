@@ -3,7 +3,7 @@
  * Plugin Name:       Automatebox
  * Plugin URI:        https://automatebox.com
  * Description:       Amazon Automation
- * Version:           3.8.4
+ * Version:           3.8.5
  * Author:            Abu Hasan Mahi
  * Author URI:        https://automatebox.com
  * License:           GPL v2 or later
@@ -23,7 +23,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 final class automatebox {
     
-    const version = '3.8.4';
+    const version = '3.8.5';
 
     //class constructor
     private function __construct() {
