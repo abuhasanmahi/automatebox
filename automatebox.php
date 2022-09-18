@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       Automatebox
- * Plugin URI:        https://automatebox.com
+ * Plugin URI:        https://github.com/abuhasanmahi/automatebox
  * Description:       Amazon Automation
  * Version:           3.8.5
  * Author:            Abu Hasan Mahi
@@ -11,6 +11,19 @@
  * Domain Path:       /languages
  */
  
+require 'plugin-update-checker/plugin-update-checker.php';
+$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+	'https://github.com/abuhasanmahi/automatebox',
+	__FILE__,
+	'automatebox'
+);
+
+//Set the branch that contains the stable release.
+$myUpdateChecker->setBranch('main');
+
+//Optional: If you're using a private repository, specify the access token like this:
+$myUpdateChecker->setAuthentication('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');
+
 if( ! defined( 'ABSPATH') ) {
     exit;
 }
