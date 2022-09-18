@@ -3,7 +3,7 @@
  * Plugin Name:       Automatebox
  * Plugin URI:        https://github.com/abuhasanmahi/automatebox
  * Description:       Amazon Automation
- * Version:           3.8.8
+ * Version:           3.8.9
  * Author:            Abu Hasan Mahi
  * Author URI:        https://automatebox.com
  * License:           GPL v2 or later
@@ -20,7 +20,7 @@ $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
 
 //Set the branch that contains the stable release.
 $myUpdateChecker->setBranch('main');
-$myUpdateChecker->setAuthentication('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');
+//$myUpdateChecker->setAuthentication('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');
 
 if( ! defined( 'ABSPATH') ) {
     exit;
@@ -34,7 +34,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 final class automatebox {
     
-    const version = '3.8.8';
+    const version = '3.8.9';
 
     //class constructor
     private function __construct() {
