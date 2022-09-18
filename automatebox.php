@@ -3,7 +3,7 @@
  * Plugin Name:       Automatebox
  * Plugin URI:        https://github.com/abuhasanmahi/automatebox
  * Description:       Amazon Automation
- * Version:           3.9.1
+ * Version:           3.9.2
  * Author:            Abu Hasan Mahi
  * Author URI:        https://automatebox.com
  * License:           GPL v2 or later
@@ -31,7 +31,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 final class automatebox {
     
-    const version = '3.9.1';
+    const version = '3.9.2';
 
     //class constructor
     private function __construct() {
