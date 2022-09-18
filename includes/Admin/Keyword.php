@@ -150,7 +150,7 @@ class Keyword {
             $show_table_img = !empty($settings['show_table_img'])? $settings['show_table_img']:0;
             $show_table_score = !empty($settings['show_table_score'])? $settings['show_table_score']:0;
             $show_table_price = !empty($settings['show_table_price'])? $settings['show_table_price']:0;
-            $featured_img = !empty($settings['featured_img'])? $settings['featured_img']:1;  
+            $featured_img = !empty($settings['featured_img'])? $settings['featured_img']:0;  
             $show_affiliate_disclaimer = !empty($settings['show_affiliate_disclaimer'])? $settings['show_affiliate_disclaimer']:1;
             if($show_affiliate_disclaimer == 1){
                 $affiliate_disclaimer = !empty($settings['affiliate_disclaimer'])? $settings['affiliate_disclaimer']:'';
