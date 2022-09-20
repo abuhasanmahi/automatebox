@@ -3,7 +3,7 @@
  * Plugin Name:       Automatebox
  * Plugin URI:        https://github.com/abuhasanmahi/automatebox
  * Description:       Amazon Automation
- * Version:           4.0.1
+ * Version:           4.0.2
  * Author:            Abu Hasan Mahi
  * Author URI:        https://automatebox.com
  * License:           GPL v2 or later
@@ -31,13 +31,14 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 final class automatebox {
     
-    const version = '4.0.1';
+    const version = '4.0.2';
 
     //class constructor
     private function __construct() {
         $this->define_constants();
 
         register_activation_hook( __FILE__, [ $this, 'activate' ] );
+        add_action('plugins_loaded', [$this, 'activate']);
         add_action('plugins_loaded', [$this, 'init_plugin']);
     }
 
