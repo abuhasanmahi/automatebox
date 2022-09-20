@@ -176,10 +176,12 @@ class Installer {
             `keyword` varchar(255) NOT NULL,
             `profile` bigint(20) unsigned NOT NULL,
             `status` varchar(255) NULL,
+            `token` varchar(510) NULL,
             `faq` LONGTEXT NULL,
             `created_by` bigint(20) unsigned NOT NULL,
             `created_at` datetime NOT NULL,
-            PRIMARY KEY (`id`)
+            PRIMARY KEY (`id`),
+            UNIQUE `token` (`token`)
         ) $charset_collate";
 
         $schema2 = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}automatebox_article` (
@@ -193,7 +195,13 @@ class Installer {
             `created_at` datetime NOT NULL,
             PRIMARY KEY (`id`)
         ) $charset_collate";
- 
+
+        $token = $wpdb->get_row("SELECT * FROM `{$wpdb->prefix}automatebox_keyword`");
+        //Add column if not present.
+        if(!isset($token->token)){
+            $wpdb->query("ALTER TABLE `{$wpdb->prefix}automatebox_keyword` ADD `token` varchar(510) NULL AFTER `status`, ADD UNIQUE `token` (`token`)");
+        }
+        
         if ( ! function_exists( 'dbDelta' ) ) {
             require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         }

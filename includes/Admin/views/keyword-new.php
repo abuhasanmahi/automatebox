@@ -9,7 +9,7 @@
                         <label for="keyword"><?php _e( 'Keyword', 'automatebox' ); ?></label>
                     </th>
                     <td>
-                        <textarea class="regular-text replace-special-character-kw" name="keyword" id="keyword" rows="8" placeholder="Enter keywords with line break. For example:&#10;&#10;best toys for kids&#10;best lawn mower machine&#10;best electric kettle&#10;&#10;You can input upto 2000 keywords/lines at a time"></textarea>
+                        <textarea class="regular-text replace-special-character-kw" name="keyword" id="keyword" rows="8" placeholder="Enter keywords with line break. For example:&#10;&#10;best toys for kids&#10;best lawn mower machine&#10;best electric kettle&#10;&#10;You can input upto 3000 keywords/lines at a time"></textarea>
 
                         <?php if ( $this->has_error( 'keyword' ) ) { ?>
                             <p class="description error"><?php echo $this->get_error( 'keyword' ); ?></p>
@@ -27,7 +27,7 @@
                     var textarea = document.getElementById("keyword");
                     textarea.onkeyup = function() {
                         var lines = textarea.value.split("\n");
-                        textarea.value = lines.slice(0, 2000).join("\n");
+                        textarea.value = lines.slice(0, 3000).join("\n");
                     }
                 </script>
             </tbody>

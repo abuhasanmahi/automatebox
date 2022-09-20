@@ -175,241 +175,257 @@ class Keyword {
                 if($quota < 1){
                     $redirected_to = admin_url( 'admin.php?page=automatebox-keyword&noquota=true' );
                 }elseif($duplicate_keyword == 0){
-                    $postdata=http_build_query(
-                        array(
-                            'customer_id' => $customer_id,
-                            'key1' => $key1,
-                            'key2' => $key2,
-                            'validation_ip' => $validation_ip,
-                            'destination_ip' => $destination_ip,
-                            'quota' => $quota,
-                            'ai_quota' => $ai_quota,
-                            'tracking_id' => $tracking_id, 
-                            'access_key' => $access_key,
-                            'secret_key' => $secret_key, 
-                            'partner_tag' => $partner_tag,
-                            'flag_title_prefix' => $flag_title_prefix,
-                            'title_prefix' => $title_prefix,
-                            'flag_title_suffix' => $flag_title_suffix,
-                            'title_suffix' => $title_suffix,
-                            'permalink' => $permalink,
-                            'button_text' => $button_text,
-                            'button_style' => $button_style,
-                            'interlink' => $interlink,
-                            'feature_style' => $feature_style,
-                            'feature_shuffle' => $feature_shuffle,
-                            'content' => $content,
-                            'select_ai_introduction' => $select_ai_introduction,
-                            'select_ai_product_description' => $select_ai_product_description,
-                            'select_ai_buying_guide' => $select_ai_buying_guide,
-                            'select_ai_faq' => $select_ai_faq,
-                            'select_ai_conclusion' => $select_ai_conclusion,
-                            'product_number' => $product_number,
-                            'introduction' => $introduction,
-                            'introduction_id' => $introduction_id,
-                            'introduction_id2' => $introduction_id2,
-                            'introduction_id3' => $introduction_id3,
-                            'introduction_id4' => $introduction_id4,
-                            'introduction_id5' => $introduction_id5,
-                            'buying_guide_title' => $buying_guide_title,
-                            'buying_guide' => $buying_guide,
-                            'buying_guide_id' => $buying_guide_id,
-                            'buying_guide_id2' => $buying_guide_id2,
-                            'buying_guide_id3' => $buying_guide_id3,
-                            'buying_guide_id4' => $buying_guide_id4,
-                            'buying_guide_id5' => $buying_guide_id5,
-                            'conclusion_title' => $conclusion_title,
-                            'conclusion' => $conclusion,
-                            'conclusion_id' => $conclusion_id,
-                            'conclusion_id2' => $conclusion_id2,
-                            'conclusion_id3' => $conclusion_id3,
-                            'conclusion_id4' => $conclusion_id4,
-                            'conclusion_id5' => $conclusion_id5,
-                            'post_status' => $post_status,
-                            'frequency' => $frequency,
-                            'show_table' => $show_table,
-                            'show_table_serial' => $show_table_serial,
-                            'show_table_img' => $show_table_img,
-                            'show_table_score' => $show_table_score,
-                            'show_table_price' => $show_table_price,
-                            'featured_img' => $featured_img,
-                            'show_affiliate_disclaimer' => $show_affiliate_disclaimer,
-                            'affiliate_disclaimer' => $affiliate_disclaimer,
-                            'show_product_description' => $show_product_description,
-                            'active_continue_reading' => '',
-                            'carousel' => '',
-                            'show_img_excerpt' => 0,
-                            'display_product_details' => 1,
-                            'country_block_list' => '',
-                            'ip_block_list' => '',
-                            'footer_script' => '',
-                            'time' => time(),
-                            'keyword' => $keyword,
-                            'domain' => $domain,
-                            'token' => $token_id.'_'.$domain.'_'.$keyword
-                        )
-                    );
-                    
-                    $opts = array('http' =>
-                        array(
-                            'method' => 'POST',
-                            'header' => 'Content-type: application/x-www-form-urlencoded',
-                            'content' => $postdata,
-                        )
-                    );
-                    $context = stream_context_create($opts);
-                    $response = file_get_contents($destination_ip,false,$context);
-                    $data = json_decode($response,true);
+                    $args = [
+                        'keyword'    => $keyword,
+                        'profile'    => 0,
+                        'status'     => 'test',
+                        'token'      => $key1.$keyword
+                    ];
 
-                    if($data['msgcode'] == '200'){
-                        if($custom_category == 0){
-                            $my_category = array(
-                                'cat_ID'    => 0,
-                                'taxonomy'  => 'category',
-                                'cat_name'   => $data['category'],
-                                'post_author'   => get_current_user_id()
-                            );
-                
-                            $categoryId = wp_insert_category( $my_category, $wp_error = false );
-
-                            $term_id = category_exists( $data['category'], $parent = null );
-                            if($term_id == 0 || $term_id == NULL){
-                                $categoryId = wp_insert_category( $my_category, $wp_error = false );
-                            }else{
-                                $categoryId = $term_id;
-                            }
-                        }else{
-                            $categoryId = $custom_category_text;
-                        }
-                        
-                        if($tags == 1){
-                            $flag_tags = $data['tag_name'];
-                        }else{
-                            $flag_tags = '';
-                        }
-
-                        //Create Post
-                        $my_post = array(
-                            'post_title'    => wp_strip_all_tags( $data['title'] ),
-                            'post_name'     => $data['permalink'],
-                            'post_content'  => $data['content'],
-                            'post_status'   => $data['post_status'],
-                            'tags_input'    => $flag_tags,
-                            'post_author'   => get_current_user_id(),
-                            'post_category' => array( $categoryId )
-                        );
-                        
-                        // Insert the post into the database
-                        $insert_post = wp_insert_post( $my_post );
-                        if ( is_wp_error( $insert_post ) ) {
-                            $status = 'failed';
-                            wp_die( $insert_post->get_error_message() );
-                        }else{
-                            $status = 'success';
-                        }
-
-                        update_post_meta($insert_post,'rank_math_focus_keyword',strtolower($keyword));
-                        update_post_meta($insert_post,'_yoast_wpseo_focuskw',strtolower($keyword));
-
-                        // Add Featured Image to Post
-                        if($featured_img == 1 && $data['image_url'] != ''){
-                            wd_insert_image($data['image_url'],$insert_post);
-                        }
-
-                        $args = [
-                            'keyword'    => $keyword,
-                            'profile'    => 0,
-                            'status'     => $status
-                        ];
-
-                        $insert_id = wd_keyword_insert( $args );
-                
-                        if ( is_wp_error( $insert_id ) ) {
-                            wp_die( $insert_id->get_error_message() );
-                        }
-
-                        $value = array(
-                            'customer_id' => $data['customer_id'],
-                            'key1' => $data['key1'],
-                            'key2' => $data['key2'],
-                            'validation_ip' => $data['validation_ip'],
-                            'destination_ip' => $data['destination_ip'],
-                            'forge_initiate_ip' => $data['forge_initiate_ip'],
-                            'forge_publish_ip' => $data['forge_publish_ip'],
-                            'quota' => $data['quota'],
-                            'ai_quota' => $data['ai_quota'],
-                            'word_limit' => $data['word_limit'],
-                        );
-                        update_option( 'automatebox_key', $value );
-
-                        $redirected_to = admin_url( 'admin.php?page=automatebox-keyword&inserted=true' );
+                    $insert_id_test = wd_keyword_insert( $args );
+            
+                    if ( is_wp_error( $insert_id_test ) ) {
+                        //wp_die( $insert_id_test->get_error_message() );
                     }else{
-                        if($data['msgcode'] == '103'){
-                            $args = [
-                                'keyword'    => $keyword,
-                                'profile'    => 0,
-                                'status'    => 'invaild key'
-                            ];
-        
-                            $insert_id = wd_keyword_insert( $args );
+                    
+                        wd_delete_keyword($insert_id_test);
+                        $postdata=http_build_query(
+                            array(
+                                'customer_id' => $customer_id,
+                                'key1' => $key1,
+                                'key2' => $key2,
+                                'validation_ip' => $validation_ip,
+                                'destination_ip' => $destination_ip,
+                                'quota' => $quota,
+                                'ai_quota' => $ai_quota,
+                                'tracking_id' => $tracking_id, 
+                                'access_key' => $access_key,
+                                'secret_key' => $secret_key, 
+                                'partner_tag' => $partner_tag,
+                                'flag_title_prefix' => $flag_title_prefix,
+                                'title_prefix' => $title_prefix,
+                                'flag_title_suffix' => $flag_title_suffix,
+                                'title_suffix' => $title_suffix,
+                                'permalink' => $permalink,
+                                'button_text' => $button_text,
+                                'button_style' => $button_style,
+                                'interlink' => $interlink,
+                                'feature_style' => $feature_style,
+                                'feature_shuffle' => $feature_shuffle,
+                                'content' => $content,
+                                'select_ai_introduction' => $select_ai_introduction,
+                                'select_ai_product_description' => $select_ai_product_description,
+                                'select_ai_buying_guide' => $select_ai_buying_guide,
+                                'select_ai_faq' => $select_ai_faq,
+                                'select_ai_conclusion' => $select_ai_conclusion,
+                                'product_number' => $product_number,
+                                'introduction' => $introduction,
+                                'introduction_id' => $introduction_id,
+                                'introduction_id2' => $introduction_id2,
+                                'introduction_id3' => $introduction_id3,
+                                'introduction_id4' => $introduction_id4,
+                                'introduction_id5' => $introduction_id5,
+                                'buying_guide_title' => $buying_guide_title,
+                                'buying_guide' => $buying_guide,
+                                'buying_guide_id' => $buying_guide_id,
+                                'buying_guide_id2' => $buying_guide_id2,
+                                'buying_guide_id3' => $buying_guide_id3,
+                                'buying_guide_id4' => $buying_guide_id4,
+                                'buying_guide_id5' => $buying_guide_id5,
+                                'conclusion_title' => $conclusion_title,
+                                'conclusion' => $conclusion,
+                                'conclusion_id' => $conclusion_id,
+                                'conclusion_id2' => $conclusion_id2,
+                                'conclusion_id3' => $conclusion_id3,
+                                'conclusion_id4' => $conclusion_id4,
+                                'conclusion_id5' => $conclusion_id5,
+                                'post_status' => $post_status,
+                                'frequency' => $frequency,
+                                'show_table' => $show_table,
+                                'show_table_serial' => $show_table_serial,
+                                'show_table_img' => $show_table_img,
+                                'show_table_score' => $show_table_score,
+                                'show_table_price' => $show_table_price,
+                                'featured_img' => $featured_img,
+                                'show_affiliate_disclaimer' => $show_affiliate_disclaimer,
+                                'affiliate_disclaimer' => $affiliate_disclaimer,
+                                'show_product_description' => $show_product_description,
+                                'active_continue_reading' => '',
+                                'carousel' => '',
+                                'show_img_excerpt' => 0,
+                                'display_product_details' => 1,
+                                'country_block_list' => '',
+                                'ip_block_list' => '',
+                                'footer_script' => '',
+                                'time' => time(),
+                                'keyword' => $keyword,
+                                'domain' => $domain,
+                                'token' => $token_id.'_'.$domain.'_'.$keyword
+                            )
+                        );
+                        
+                        $opts = array('http' =>
+                            array(
+                                'method' => 'POST',
+                                'header' => 'Content-type: application/x-www-form-urlencoded',
+                                'content' => $postdata,
+                            )
+                        );
+                        $context = stream_context_create($opts);
+                        $response = file_get_contents($destination_ip,false,$context);
+                        $data = json_decode($response,true);
 
-                            $redirected_to = admin_url( 'admin.php?page=automatebox-keyword&invalidkey=true' );
-                        }elseif($data['msgcode'] == '105'){
-                            $args = [
-                                'keyword'    => $keyword,
-                                'profile'    => 0,
-                                'status'    => 'no quota'
-                            ];
-        
-                            $insert_id = wd_keyword_insert( $args );
+                        if($data['msgcode'] == '200'){
+                            if($custom_category == 0){
+                                $my_category = array(
+                                    'cat_ID'    => 0,
+                                    'taxonomy'  => 'category',
+                                    'cat_name'   => $data['category'],
+                                    'post_author'   => get_current_user_id()
+                                );
+                    
+                                $categoryId = wp_insert_category( $my_category, $wp_error = false );
 
-                            $redirected_to = admin_url( 'admin.php?page=automatebox-keyword&noquota=true' );
-                        }elseif($data['msgcode'] == '106'){
-                            $args = [
-                                'keyword'    => $keyword,
-                                'profile'    => 0,
-                                'status'    => 'no ai quota'
-                            ];
-        
-                            $insert_id = wd_keyword_insert( $args );
-
-                            $redirected_to = admin_url( 'admin.php?page=automatebox-keyword&noaiquota=true' );
-                        }elseif($data['msgcode'] == '107'){
-                            //duplicate (server issue)
-
-                            $redirected_to = admin_url( 'admin.php?page=automatebox-keyword' );
-                        }elseif($data['msgcode'] == '108'){
-                            $redirected_to = admin_url( 'admin.php?page=automatebox-keyword&exceedlimit=true' );
-                        }elseif($data['msgcode'] == '111'){
-                            $args = [
-                                'keyword'    => $keyword,
-                                'profile'    => 0,
-                                'status'    => 'Failed to get content from Amazon'
-                            ];
-        
-                            $insert_id = wd_keyword_insert( $args );
-
-                            $redirected_to = admin_url( 'admin.php?page=automatebox-keyword&invalidamazon=true' );
-                        }elseif($data['msgcode'] == '112'){
-                            $args = [
-                                'keyword'    => $keyword,
-                                'profile'    => 0,
-                                'status'    => 'Failed to get content from Amazon'
-                            ];
-        
-                            $insert_id = wd_keyword_insert( $args );
-
-                            $redirected_to = admin_url( 'admin.php?page=automatebox-keyword&failedamazon=true' );
-                        }else{
-                            $args = [
-                                'keyword'    => $keyword,
-                                'profile'    => 0,
-                                'status'    => 'failed'
-                            ];
-        
-                            $insert_id = wd_keyword_insert( $args );
+                                $term_id = category_exists( $data['category'], $parent = null );
+                                if($term_id == 0 || $term_id == NULL){
+                                    $categoryId = wp_insert_category( $my_category, $wp_error = false );
+                                }else{
+                                    $categoryId = $term_id;
+                                }
+                            }else{
+                                $categoryId = $custom_category_text;
+                            }
                             
-                            $redirected_to = admin_url( 'admin.php?page=automatebox-keyword&noapi=true' );
+                            if($tags == 1){
+                                $flag_tags = $data['tag_name'];
+                            }else{
+                                $flag_tags = '';
+                            }
+
+                            //Create Post
+                            $my_post = array(
+                                'post_title'    => wp_strip_all_tags( $data['title'] ),
+                                'post_name'     => $data['permalink'],
+                                'post_content'  => $data['content'],
+                                'post_status'   => $data['post_status'],
+                                'tags_input'    => $flag_tags,
+                                'post_author'   => get_current_user_id(),
+                                'post_category' => array( $categoryId )
+                            );
+                            
+                            // Insert the post into the database
+                            $insert_post = wp_insert_post( $my_post );
+                            if ( is_wp_error( $insert_post ) ) {
+                                $status = 'failed';
+                                wp_die( $insert_post->get_error_message() );
+                            }else{
+                                $status = 'success';
+                            }
+
+                            update_post_meta($insert_post,'rank_math_focus_keyword',strtolower($keyword));
+                            update_post_meta($insert_post,'_yoast_wpseo_focuskw',strtolower($keyword));
+
+                            // Add Featured Image to Post
+                            if($featured_img == 1 && $data['image_url'] != ''){
+                                wd_insert_image($data['image_url'],$insert_post);
+                            }
+
+                            $args = [
+                                'keyword'    => $keyword,
+                                'profile'    => 0,
+                                'status'     => $status,
+                                'token'      => $key1.$keyword
+                            ];
+
+                            $insert_id = wd_keyword_insert( $args );
+                    
+                            if ( is_wp_error( $insert_id ) ) {
+                                //wp_die( $insert_id->get_error_message() );
+                            }
+
+                            $value = array(
+                                'customer_id' => $data['customer_id'],
+                                'key1' => $data['key1'],
+                                'key2' => $data['key2'],
+                                'validation_ip' => $data['validation_ip'],
+                                'destination_ip' => $data['destination_ip'],
+                                'forge_initiate_ip' => $data['forge_initiate_ip'],
+                                'forge_publish_ip' => $data['forge_publish_ip'],
+                                'quota' => $data['quota'],
+                                'ai_quota' => $data['ai_quota'],
+                                'word_limit' => $data['word_limit'],
+                            );
+                            update_option( 'automatebox_key', $value );
+
+                            $redirected_to = admin_url( 'admin.php?page=automatebox-keyword&inserted=true' );
+                        }else{
+                            if($data['msgcode'] == '103'){
+                                $args = [
+                                    'keyword'    => $keyword,
+                                    'profile'    => 0,
+                                    'status'    => 'invaild key'
+                                ];
+            
+                                $insert_id = wd_keyword_insert( $args );
+
+                                $redirected_to = admin_url( 'admin.php?page=automatebox-keyword&invalidkey=true' );
+                            }elseif($data['msgcode'] == '105'){
+                                $args = [
+                                    'keyword'    => $keyword,
+                                    'profile'    => 0,
+                                    'status'    => 'no quota'
+                                ];
+            
+                                $insert_id = wd_keyword_insert( $args );
+
+                                $redirected_to = admin_url( 'admin.php?page=automatebox-keyword&noquota=true' );
+                            }elseif($data['msgcode'] == '106'){
+                                $args = [
+                                    'keyword'    => $keyword,
+                                    'profile'    => 0,
+                                    'status'    => 'no ai quota'
+                                ];
+            
+                                $insert_id = wd_keyword_insert( $args );
+
+                                $redirected_to = admin_url( 'admin.php?page=automatebox-keyword&noaiquota=true' );
+                            }elseif($data['msgcode'] == '107'){
+                                //duplicate (server issue)
+
+                                $redirected_to = admin_url( 'admin.php?page=automatebox-keyword' );
+                            }elseif($data['msgcode'] == '108'){
+                                $redirected_to = admin_url( 'admin.php?page=automatebox-keyword&exceedlimit=true' );
+                            }elseif($data['msgcode'] == '111'){
+                                $args = [
+                                    'keyword'    => $keyword,
+                                    'profile'    => 0,
+                                    'status'    => 'Failed to get content from Amazon'
+                                ];
+            
+                                $insert_id = wd_keyword_insert( $args );
+
+                                $redirected_to = admin_url( 'admin.php?page=automatebox-keyword&invalidamazon=true' );
+                            }elseif($data['msgcode'] == '112'){
+                                $args = [
+                                    'keyword'    => $keyword,
+                                    'profile'    => 0,
+                                    'status'    => 'Failed to get content from Amazon'
+                                ];
+            
+                                $insert_id = wd_keyword_insert( $args );
+
+                                $redirected_to = admin_url( 'admin.php?page=automatebox-keyword&failedamazon=true' );
+                            }else{
+                                $args = [
+                                    'keyword'    => $keyword,
+                                    'profile'    => 0,
+                                    'status'    => 'failed'
+                                ];
+            
+                                $insert_id = wd_keyword_insert( $args );
+                                
+                                $redirected_to = admin_url( 'admin.php?page=automatebox-keyword&noapi=true' );
+                            }
                         }
                     }
 
